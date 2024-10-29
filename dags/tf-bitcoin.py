@@ -2,8 +2,7 @@ import logging
 import requests
 from datetime import datetime
 from airflow.decorators import dag, task
-
-API = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true&include_last_updated_at=true"
+from airflow.models import Variable
 
 @dag(
     dag_id="tf-bitcoin",
@@ -15,6 +14,7 @@ def main():
     
     @task(task_id="extract", retries=2)
     def extract_bitcoin():
+        API = Variable.get("api-bitcoin")
         return requests.get(API).json()["bitcoin"]
     
     @task(task_id="transform")
