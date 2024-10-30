@@ -9,7 +9,8 @@ from datetime import datetime
 with DAG(
     dag_id="traditional-dag",
     start_date=datetime(2024,10,29),
-    catchup=False
+    catchup=False,
+    tags=['especialização'],
 ) as dag:    
     # TODO 3: declare tasks
     # TODO function 1: extract data
