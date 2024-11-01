@@ -27,7 +27,7 @@ default_args = {
 def init_db_perf_init():
 
     @task
-    def generate_sample_dataset(rows: int = 10_000_000) -> Dict[str, str]:
+    def generate_sample_dataset(rows: int = 20_000_000) -> Dict[str, str]:
         """Generate a large dataset for benchmarking"""
         logging.info(f"Generating sample dataset with {rows} rows")
 

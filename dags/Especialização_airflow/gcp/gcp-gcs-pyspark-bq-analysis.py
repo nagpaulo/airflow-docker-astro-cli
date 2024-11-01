@@ -16,8 +16,8 @@ import uuid
 from airflow.decorators import dag, task_group
 from airflow.providers.google.cloud.operators.dataproc import DataprocCreateBatchOperator
 from airflow.providers.google.cloud.sensors.gcs import GCSObjectsWithPrefixExistenceSensor
-from airflow.providers.google.cloud.operators.bigquery import BigQueryCreateEmptyTableOperator
-from astro import sql as aql
+from airflow.providers.google.cloud.operators.bigquery import BigQueryCreateEmptyTableOperator, BigQueryCreateEmptyDatasetOperator
+from airflow.providers.google.cloud.transfers.gcs_to_bigquery import GCSToBigQueryOperator
 from airflow.utils.dates import days_ago
 from airflow.models.baseoperator import chain
 
@@ -100,6 +100,14 @@ def pyspark_analytics_serverless():
     def load_to_bigquery():
         """Load processed data to BigQuery"""
 
+        create_dataset = BigQueryCreateEmptyDatasetOperator(
+            task_id='create_dataset',
+            dataset_id=BQ_DATASET,
+            project_id=PROJECT_ID,
+            location=REGION,
+            exists_ok=True
+        )
+
         create_bq_table = BigQueryCreateEmptyTableOperator(
             task_id='create_bq_table',
             project_id=PROJECT_ID,
@@ -118,37 +126,7 @@ def pyspark_analytics_serverless():
             ]
         )
 
-        @aql.run_raw_sql
-        def load_data_to_bq():
-            """Load processed parquet table to BigQuery"""
-
-            merge_query = f"""
-                MERGE INTO {BQ_DATASET}.{BQ_TABLE} T
-                USING (
-                    SELECT *
-                    FROM EXTERNAL_NAME(
-                        'gs://{GCS_BUCKET}/{PROCESSED_PATH}/*',
-                        PARQUET
-                    )
-                ) S
-                ON T.payment_date = S.payment_date 
-                   AND T.country = S.country 
-                   AND T.payment_method = S.payment_method
-                WHEN MATCHED THEN
-                    UPDATE SET 
-                        status = S.status,
-                        currency = S.currency,
-                        amount = S.amount,
-                        total_users = S.total_users,
-                        success_rate = S.success_rate,
-                        processed_at = S.processed_at
-                WHEN NOT MATCHED THEN
-                    INSERT ROW
-            """
-
-            return merge_query
-
-        return chain(create_bq_table, load_data_to_bq(conn_id="google_cloud_default"))
+        return chain(create_dataset, create_bq_table)
 
     ingest_data_task = ingest_data()
     processed_data_task = process_data()
