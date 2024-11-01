@@ -1,30 +1,27 @@
-"""
-"""
-
-# import libraries
+# TODO required libraries
 from airflow.decorators import dag, task
 from datetime import datetime
 
-# declare structure
+
+# TODO DAG structure using decorators
 @dag(
-    dag_id="task-flow-dag",
-    start_date=datetime(2024, 10, 29),
-    catchup=False,
-    is_paused_upon_creation=False,
+    dag_id="modern-task-flow-pythonic-et",
+    start_date=datetime(2024, 10, 20),
+    catchup=False
 )
 def init():
 
-    # tasks
-
+    # TODO declare tasks using decorators
     @task()
     def extract():
         return {"data": "extract"}
-    
+
     @task()
     def transform(data: dict):
         return {"data": "transform"}
 
+    # TODO declare dependencies
     transform(extract())
 
-dag = init()
 
+dag = init()

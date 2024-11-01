@@ -7,7 +7,6 @@ Shows different TaskFlow API decorators and their functionalities.
 from airflow.decorators import dag, task, task_group
 from datetime import datetime, timedelta
 from typing import Dict, List
-from airflow.models import Variable
 import requests
 
 
@@ -17,9 +16,9 @@ import requests
     schedule_interval='@hourly',
     start_date=datetime(2024, 1, 1),
     catchup=False,
-    tags=['crypto', 'pipeline', 'especialização'],
+    tags=['crypto', 'pipeline'],
     default_args={
-        'owner': 'Paulo Roberto Mesquita da Silva',
+        'owner': 'luan moreno m. maciel',
         'retries': 1,
         'retry_delay': timedelta(minutes=5)
     }
@@ -37,7 +36,7 @@ def crypto_pipeline():
     def get_crypto_price() -> Dict:
         """Fetch crypto prices from CoinGecko API"""
         try:
-            url = Variable.get("api-espec-bitcoin")
+            url = "https://api.coingecko.com/api/v3/simple/price"
             params = {
                 "ids": "bitcoin,ethereum,cardano",
                 "vs_currencies": "usd"

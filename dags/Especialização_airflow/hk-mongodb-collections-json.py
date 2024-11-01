@@ -12,7 +12,7 @@ load_dotenv()
 MONGODB_DB_NAME = os.getenv('MONGODB_DB_NAME', 'owshq')
 
 default_args = {
-    'owner': 'Paulo Roberto Mesquita da Silva',
+    'owner': 'luan moreno m. maciel',
     'retries': 1,
     'retry_delay': timedelta(minutes=5)
 }
@@ -23,7 +23,7 @@ default_args = {
     schedule_interval=None,
     start_date=datetime(2024, 10, 20),
     catchup=False,
-    tags=['hook', 'mongodb', 'extract', 'especialização']
+    tags=['hook', 'mongodb', 'extract']
 )
 def mongodb_data_extract_json():
 

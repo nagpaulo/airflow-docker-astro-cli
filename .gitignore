@@ -1,1 +1,5 @@
 .venv/
+app/gen/gcp_key_file.json
+app/gen/.env
+app/gen/__pycache__/*
+app/gen/src/objects/__pycache__/*

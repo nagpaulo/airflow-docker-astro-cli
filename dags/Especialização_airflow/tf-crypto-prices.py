@@ -6,7 +6,6 @@ DAG that fetches, processes and loads crypto prices using TaskFlow API.
 # TODO import libraries
 import requests
 from airflow.decorators import dag, task
-from airflow.models import Variable
 from datetime import datetime
 from typing import Dict
 
@@ -17,16 +16,16 @@ from typing import Dict
     schedule_interval='@daily',
     start_date=datetime(2024, 1, 1),
     catchup=False,
-    tags=['crypto', 'api', 'especialização']
+    tags=['crypto', 'api']
 )
 def crypto_pipeline():
 
     # TODO declare tasks
-    @task(task_id="fetch-api-crypto", retries=2)
+    @task(retries=2)
     def get_crypto_price() -> Dict:
         """Fetch crypto prices from CoinGecko API"""
-
-        url = Variable.get("api-espec-bitcoin")
+        
+        url = "https://api.coingecko.com/api/v3/simple/price"
         params = {
             "ids": "bitcoin,ethereum",
             "vs_currencies": "usd"

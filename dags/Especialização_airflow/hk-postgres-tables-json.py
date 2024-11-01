@@ -9,7 +9,7 @@ from contextlib import closing
 load_dotenv()
 
 default_args = {
-    'owner': 'Paulo Roberto Mesquita da Silva',
+    'owner': 'luan moreno m. maciel',
     'retries': 1,
     'retry_delay': timedelta(minutes=5)
 }
@@ -21,7 +21,7 @@ default_args = {
     schedule_interval=None,
     start_date=datetime(2024, 10, 20),
     catchup=False,
-    tags=['hook', 'postgres', 'extract', 'especialização']
+    tags=['hook', 'postgres', 'extract']
 )
 def postgres_data_extract_json():
     @task()
